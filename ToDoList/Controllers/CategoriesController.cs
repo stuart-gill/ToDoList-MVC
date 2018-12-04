@@ -40,19 +40,33 @@ namespace ToDoList.Controllers
       return View(model);
     }
 
+    //This sorts items by date within a given category:
+    [HttpGet("/categories/{categoryId}/items/sort")]
+    public ActionResult ShowSorted()
+    {
+      Dictionary<string, object> model = new Dictionary<string, object>();
+      Category selectedCategory = Category.Find(idd);
+      List<Item> categoryItems = selectedCategory.GetItemsSorted();
+      model.Add("category", foundCategory);
+      model.Add("items", categoryItems);
+      return View("Show", model);
+    }
+
     // This one creates new Items within a given Category, not new Categories:
     [HttpPost("/categories/{categoryId}/items")]
-    public ActionResult Create(int categoryId, string itemDescription)
+    public ActionResult Create(int categoryId, string itemDescription, string itemDueDate)
     {
       Dictionary<string, object> model = new Dictionary<string, object>();
       Category foundCategory = Category.Find(categoryId);
-      Item newItem = new Item(itemDescription);
+      Item newItem = new Item(itemDescription, itemDueDate);
       foundCategory.AddItem(newItem);
       List<Item> categoryItems = foundCategory.GetItems();
       model.Add("items", categoryItems);
       model.Add("category", foundCategory);
       return View("Show", model);
     }
+
+
 
   }
 }

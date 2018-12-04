@@ -47,6 +47,11 @@ namespace ToDoList.Models
         return _items;
     }
 
+    public List<Item> GetItemsSorted()
+    {
+      return 
+    }
+
     public void AddItem(Item item)
     {
         _items.Add(item);
