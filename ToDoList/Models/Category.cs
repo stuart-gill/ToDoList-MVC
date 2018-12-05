@@ -115,6 +115,7 @@ public static Category Find(int id)
       }
       return allCategoryItems;
     }
+    
 
   public override bool Equals(System.Object otherCategory)
 {
@@ -149,6 +150,25 @@ public static Category Find(int id)
       conn.Dispose();
     }
   }
+
+  public void Delete()
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"DELETE FROM categories WHERE id = @thisID;";
+      MySqlParameter thisId = new MySqlParameter();
+      thisId.ParameterName = "@thisId";
+      thisId.Value = _id;
+      cmd.Parameters.Add(thisId);
+      cmd.ExecuteNonQuery();
+      
+      conn.Close();
+      if (conn != null)
+      {
+        conn.Dispose();
+      }
+    }
 
   }
 }

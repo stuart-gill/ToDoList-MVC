@@ -173,5 +173,21 @@ namespace ToDoList.Tests
       CollectionAssert.AreEqual(testItemList, resultItemList);
     }
 
+    [TestMethod]
+    public void Delete_DeletesNameInDatabase_String()
+    {
+      //Arrange
+      Category testCategory = new Category("Walk the Dog");
+      testCategory.Save();
+      string deletedName = "";
+
+      //Act
+      testCategory.Delete();
+      string result = Category.Find(testCategory.GetId()).GetName();
+      
+      //Assert
+      Assert.AreEqual(deletedName, result);
+    }
+
   }
 }
