@@ -150,6 +150,5 @@ public static Category Find(int id)
     }
   }
 
-
   }
 }
