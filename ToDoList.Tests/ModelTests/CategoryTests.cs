@@ -174,6 +174,27 @@ namespace ToDoList.Tests
     }
 
     [TestMethod]
+
+    public void DeleteItems_DeletesAllItemsWithCategory_ItemList()
+    {
+      //Arrange, Act
+      Category testCategory = new Category("Household chores");
+      testCategory.Save();
+      Item firstItem = new Item("Mow the lawn", testCategory.GetId());
+      firstItem.Save();
+      Item secondItem = new Item("Do the dishes", testCategory.GetId());
+      secondItem.Save();
+      List<Item> testItemList = new List<Item> {firstItem, secondItem};
+      testCategory.DeleteItems();
+      string result = firstItem.GetDescription();
+      string deletedDescription="";
+
+      //Assert
+      Assert.AreEqual(deletedDescription , result);
+
+    }
+
+    [TestMethod]
     public void Delete_DeletesNameInDatabase_String()
     {
       //Arrange

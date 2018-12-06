@@ -115,6 +115,23 @@ public static Category Find(int id)
       }
       return allCategoryItems;
     }
+
+    public static void DeleteItems(int id)
+      {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      var cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"DELETE FROM items WHERE category_id = @categoryId;";
+      MySqlParameter categoryId = new MySqlParameter();
+      categoryId.ParameterName = "@categoryId";
+      categoryId.Value = id;
+      cmd.Parameters.Add(categoryId);
+      conn.Close();
+      if (conn != null)
+      {
+       conn.Dispose();
+      }
+      }
     
 
   public override bool Equals(System.Object otherCategory)
@@ -151,7 +168,7 @@ public static Category Find(int id)
     }
   }
 
-  public void Delete()
+  public static void Delete(int id)
     {
       MySqlConnection conn = DB.Connection();
       conn.Open();
@@ -159,7 +176,7 @@ public static Category Find(int id)
       cmd.CommandText = @"DELETE FROM categories WHERE id = @thisID;";
       MySqlParameter thisId = new MySqlParameter();
       thisId.ParameterName = "@thisId";
-      thisId.Value = _id;
+      thisId.Value = id;
       cmd.Parameters.Add(thisId);
       cmd.ExecuteNonQuery();
       

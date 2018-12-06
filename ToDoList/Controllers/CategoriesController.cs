@@ -44,22 +44,15 @@ namespace ToDoList.Controllers
     [HttpGet("/categories/{categoryId}/delete")]
     public ActionResult Delete(int categoryId)
     {
-      Dictionary<string, object> model = new Dictionary<string, object>();
-      Category selectedCategory = Category.Find(categoryId);
-      List<Item> categoryItems = selectedCategory.GetItems();
-
-      foreach(Item item in categoryItems)
-      {
-        item.Delete();
-      }
-
-      selectedCategory.Delete();
-
-      model.Add("category", selectedCategory);
-      model.Add("items", categoryItems);
-      
+      // Dictionary<string, object> model = new Dictionary<string, object>();
+      // Category selectedCategory = Category.Find(categoryId);
+      // model.Add("category", selectedCategory);
+      // model.Add("items", categoryItems);
+      Category.DeleteItems(categoryId);
+      Category.Delete(categoryId);
       return View();
     }
+
 
     //This one creates new Items within a given Category, not new Categories:
     [HttpPost("/categories/{categoryId}/items")]
