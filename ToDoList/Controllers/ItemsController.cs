@@ -24,7 +24,7 @@ namespace ToDoList.Controllers
       model.Add("category", category);
       return View(model);
     }
-    //Object deletes itself
+    // Object deletes itself
     // [HttpGet("/categories/{categoryId}/items/{itemID}/delete")]
     // public ActionResult Delete(int categoryId, int itemId)
     // {
@@ -39,17 +39,17 @@ namespace ToDoList.Controllers
 
     //Static class delete method
     
-    [HttpGet("/categories/{categoryId}/items/{itemID}/delete")]
-    public ActionResult Delete(int categoryId, int itemId)
-    {
-      Item item = Item.Find(itemId);
-      Category category = Category.Find(categoryId);
-      Dictionary<string, object> model = new Dictionary<string, object>();
-      model.Add("item", item);
-      model.Add("category", category);
-      Item.Delete(itemId);
-      return View(model);
-    }
+    // [HttpGet("/categories/{categoryId}/items/{itemID}/delete")]
+    // public ActionResult Delete(int categoryId, int itemId)
+    // {
+    //   Item item = Item.Find(itemId);
+    //   Category category = Category.Find(categoryId);
+    //   Dictionary<string, object> model = new Dictionary<string, object>();
+    //   model.Add("item", item);
+    //   model.Add("category", category);
+    //   Item.Delete(categoryId, itemId);
+    //   return View(model);
+    // }
 
 
     [HttpPost("/items/delete")]

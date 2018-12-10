@@ -30,7 +30,7 @@ namespace ToDoList.Controllers
       return View("Index", allCategories);
     }
 
-    [HttpGet("/categories/{id}")]
+    [HttpGet("/categories/{id}/items")]
     public ActionResult Show(int id)
     {
       Dictionary<string, object> model = new Dictionary<string, object>();
@@ -41,17 +41,17 @@ namespace ToDoList.Controllers
       return View(model);
     }
 
-    [HttpGet("/categories/{categoryId}/delete")]
-    public ActionResult Delete(int categoryId)
-    {
-      // Dictionary<string, object> model = new Dictionary<string, object>();
-      // Category selectedCategory = Category.Find(categoryId);
-      // model.Add("category", selectedCategory);
-      // model.Add("items", categoryItems);
-      Category.DeleteItems(categoryId);
-      Category.Delete(categoryId);
-      return View();
-    }
+    // [HttpGet("/categories/{categoryId}/delete")]
+    // public ActionResult Delete(int categoryId)
+    // {
+    //   // Dictionary<string, object> model = new Dictionary<string, object>();
+    //   // Category selectedCategory = Category.Find(categoryId);
+    //   // model.Add("category", selectedCategory);
+    //   // model.Add("items", categoryItems);
+    //   Category.DeleteItems(categoryId);
+    //   Category.Delete(categoryId);
+    //   return View();
+    // }
 
 
     //This one creates new Items within a given Category, not new Categories:
@@ -62,6 +62,7 @@ namespace ToDoList.Controllers
       Category foundCategory = Category.Find(categoryId);
       Item newItem = new Item(itemDescription, categoryId);
       newItem.Save();
+      foundCategory.AddItem(newItem);
       List<Item> categoryItems = foundCategory.GetItems();
       model.Add("items", categoryItems);
       model.Add("category", foundCategory);
