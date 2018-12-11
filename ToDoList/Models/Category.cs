@@ -88,49 +88,35 @@ namespace ToDoList.Models
       return newCategory;
     }
 
+    //with join statement, don't delete! (this on def works)
     public List<Item> GetItems()
     {
-      MySqlConnection conn = DB.Connection();
-      conn.Open();
-      var cmd = conn.CreateCommand() as MySqlCommand;
-      cmd.CommandText = @"SELECT item_id FROM categories_items WHERE category_id = @CategoryId;";
-      MySqlParameter categoryIdParameter = new MySqlParameter();
-      categoryIdParameter.ParameterName = "@CategoryId";
-      categoryIdParameter.Value = _id;
-      cmd.Parameters.Add(categoryIdParameter);
-      var rdr = cmd.ExecuteReader() as MySqlDataReader;
-      List<int> itemIds = new List<int> {};
-      while(rdr.Read())
-      {
-        int itemId = rdr.GetInt32(0);
-        itemIds.Add(itemId);
-      }
-      rdr.Dispose();
-      List<Item> items = new List<Item> {};
-      foreach (int itemId in itemIds)
-      {
-        var itemQuery = conn.CreateCommand() as MySqlCommand;
-        itemQuery.CommandText = @"SELECT * FROM items WHERE id = @ItemId;";
-        MySqlParameter itemIdParameter = new MySqlParameter();
-        itemIdParameter.ParameterName = "@ItemId";
-        itemIdParameter.Value = itemId;
-        itemQuery.Parameters.Add(itemIdParameter);
-        var itemQueryRdr = itemQuery.ExecuteReader() as MySqlDataReader;
-        while(itemQueryRdr.Read())
+        MySqlConnection conn = DB.Connection();
+        conn.Open();
+        MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+        cmd.CommandText = @"SELECT items.* FROM categories
+            JOIN categories_items ON (categories.id = categories_items.category_id)
+            JOIN items ON (categories_items.item_id = items.id)
+            WHERE categories.id = @CategoryId;";
+        MySqlParameter categoryIdParameter = new MySqlParameter();
+        categoryIdParameter.ParameterName = "@CategoryId";
+        categoryIdParameter.Value = _id;
+        cmd.Parameters.Add(categoryIdParameter);
+        MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+        List<Item> items = new List<Item>{};
+        while(rdr.Read())
         {
-          int thisItemId = itemQueryRdr.GetInt32(0);
-          string itemDescription = itemQueryRdr.GetString(1);
-          Item foundItem = new Item(itemDescription, thisItemId);
-          items.Add(foundItem);
+          int itemId = rdr.GetInt32(0);
+          string itemDescription = rdr.GetString(1);
+          Item newItem = new Item(itemDescription, itemId);
+          items.Add(newItem);
         }
-        itemQueryRdr.Dispose();
-      }
-      conn.Close();
-      if (conn != null)
-      {
-        conn.Dispose();
-      }
-      return items;
+        conn.Close();
+        if (conn != null)
+        {
+          conn.Dispose();
+        }
+        return items;
     }
 
     public override bool Equals(System.Object otherCategory)
