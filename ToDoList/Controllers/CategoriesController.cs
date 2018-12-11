@@ -30,43 +30,27 @@ namespace ToDoList.Controllers
       return View("Index", allCategories);
     }
 
-    [HttpGet("/categories/{id}/items")]
+    [HttpGet("/categories/{id}")]
     public ActionResult Show(int id)
     {
       Dictionary<string, object> model = new Dictionary<string, object>();
       Category selectedCategory = Category.Find(id);
       List<Item> categoryItems = selectedCategory.GetItems();
+      List<Item> allItems = Item.GetAll();
       model.Add("category", selectedCategory);
-      model.Add("items", categoryItems);
+      model.Add("categoryItems", categoryItems);
+      model.Add("allItems", allItems);
       return View(model);
     }
 
-    // [HttpGet("/categories/{categoryId}/delete")]
-    // public ActionResult Delete(int categoryId)
-    // {
-    //   // Dictionary<string, object> model = new Dictionary<string, object>();
-    //   // Category selectedCategory = Category.Find(categoryId);
-    //   // model.Add("category", selectedCategory);
-    //   // model.Add("items", categoryItems);
-    //   Category.DeleteItems(categoryId);
-    //   Category.Delete(categoryId);
-    //   return View();
-    // }
-
-
-    //This one creates new Items within a given Category, not new Categories:
-    [HttpPost("/categories/{categoryId}/items")]
-    public ActionResult Create(int categoryId, string itemDescription)
+    [HttpPost("/categories/{categoryId}/items/new")]
+    public ActionResult AddItem(int categoryId, int itemId)
     {
-      Dictionary<string, object> model = new Dictionary<string, object>();
-      Category foundCategory = Category.Find(categoryId);
-      Item newItem = new Item(itemDescription, categoryId);
-      newItem.Save();
-      foundCategory.AddItem(newItem);
-      List<Item> categoryItems = foundCategory.GetItems();
-      model.Add("items", categoryItems);
-      model.Add("category", foundCategory);
-      return View("Show", model);
+      Category category = Category.Find(categoryId);
+      Item item = Item.Find(itemId);
+      category.AddItem(item);
+      return RedirectToAction("Show",  new { id = categoryId });
     }
+
   }
 }
